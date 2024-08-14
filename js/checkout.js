@@ -3,7 +3,19 @@ import { products } from "../data/products.js";
 import { moneyConvert } from "./utils/money.js";
 
 showCheckout();
+const updateLink = document.querySelectorAll(".js-update-cart-item");
 const deleteLink = document.querySelectorAll(".js-delete-cart-item");
+
+updateLink.forEach((link) => {
+  link.addEventListener("click", () => {
+    const updateId = link.dataset.updateProductId;
+    const cartContainer = document.querySelector(
+      `.cart-item-container`
+    );
+    cartContainer.classList.add('is-editing-quantity');
+  });
+});
+
 deleteLink.forEach((link) => {
   link.addEventListener("click", () => {
     const deleteId = link.dataset.productId;
@@ -47,8 +59,10 @@ function showCheckout() {
             <span>
               Quantity: <span class="quantity-label">${cartItem.quantity}</span>
             </span>
-            <span class="update-quantity-link link-primary">
-              Update
+            <span data-update-product-id="${
+              cartItem.productId
+            }" class="update-quantity-link link-primary js-update-cart-item">
+              Update <input class="quantity-input type="text"><span class="save-quantity-link link-primary">Save</span>
             </span>
             <span data-product-id="${
               cartItem.productId
