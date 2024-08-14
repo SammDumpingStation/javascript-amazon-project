@@ -1,5 +1,26 @@
-let productContainer = document.querySelector(".products-grid");
+import { cart, addToCart } from "../data/cart.js";
+import { products } from "../data/products.js";
 
+let productContainer = document.querySelector(".products-grid");
+showProducts();
+
+const addToCartButton = document.querySelectorAll(".js-add-to-cart");
+addToCartButton.forEach((button) => {
+  button.addEventListener("click", () => {
+    
+    const productId = button.dataset.productId;
+    const quantityValue = document.querySelector(
+      `.js-quantity-selector-${productId}`
+    ).value;
+    const quantityToNum = +quantityValue;
+
+    saveMessage(productId);
+    addToCart(productId, quantityToNum);
+    updateCartQuantity();
+  });
+});
+
+//Functions
 function showProducts() {
   productContainer.innerHTML = "";
   products.forEach((value) => {
@@ -27,19 +48,20 @@ function showProducts() {
           </div>
 
           <div class="product-quantity-container">
-            <select>
+            <select class="js-quantity-selector-${value.id}">
               ${option()}
             </select>
           </div>
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
-            <img src="images/icons/checkmark.png">
-            Added
+          <div class="added-to-cart js-saved-product-${value.id}">
+         
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${
+            value.id
+          }">
             Add to Cart
           </button>
         </div>`;
@@ -50,10 +72,27 @@ function showProducts() {
 function option() {
   let options = "";
   for (let index = 1; index < 11; index++) {
-    options += `<option value="${index}">${index}</option>
+    options += `<option value="${index}" ">${index}</option>
 `;
   }
   return options;
 }
 
-showProducts();
+function updateCartQuantity() {
+  let quantityCount = 0;
+  cart.forEach((item) => {
+    quantityCount += item.quantity;
+  });
+  document.querySelector(".cart-quantity").innerHTML = quantityCount;
+}
+
+function saveMessage(productId) {
+  let timeout;
+  const productSaved = document.querySelector(`.js-saved-product-${productId}`);
+  productSaved.innerHTML = `<img src="images/icons/checkmark.png"> Added`;
+  productSaved.classList.add("show");
+  clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    productSaved.classList.remove("show");
+  }, 2000);
+}
