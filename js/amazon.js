@@ -1,10 +1,12 @@
 import { cart, addToCart } from "../data/cart.js";
 import { products } from "../data/products.js";
+import { moneyConvert } from "./utils/money.js";
 
 let productContainer = document.querySelector(".products-grid");
 showProducts();
 
 const addToCartButton = document.querySelectorAll(".js-add-to-cart");
+
 addToCartButton.forEach((button) => {
   button.addEventListener("click", () => {
     
@@ -19,6 +21,9 @@ addToCartButton.forEach((button) => {
     updateCartQuantity();
   });
 });
+
+console.log(cart);
+
 
 //Functions
 function showProducts() {
@@ -44,7 +49,7 @@ function showProducts() {
           </div>
 
           <div class="product-price">
-            $${(value.priceCents / 100).toFixed(2)}
+            $${moneyConvert(value.priceCents)}
           </div>
 
           <div class="product-quantity-container">
